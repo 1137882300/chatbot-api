@@ -21,10 +21,11 @@ public class PropertyUtil {
 
     /**
      * Spring Boot 1.x is compatible with Spring Boot 2.x by Using Java Reflect.
+     *
      * @param environment : the environment context
-     * @param prefix : the prefix part of property key
+     * @param prefix      : the prefix part of property key
      * @param targetClass : the target class type of result
-     * @param <T> : refer to @param targetClass
+     * @param <T>         : refer to @param targetClass
      * @return T
      */
     @SuppressWarnings("unchecked")
@@ -46,7 +47,7 @@ public class PropertyUtil {
             String prefixParam = prefix.endsWith(".") ? prefix : prefix + ".";
             return getSubPropertiesMethod.invoke(resolverObject, prefixParam);
         } catch (final ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException
-                | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                       | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             throw new RuntimeException(ex.getMessage(), ex);
         }
     }
@@ -54,7 +55,7 @@ public class PropertyUtil {
     /**
      * @author juzi
      * @date 2023/7/11 上午 9:27
-     * @description 从Spring Boot的环境变量中获取特定前缀下的配置属性，并将其绑定到给定的目标类上。
+     * @description 从Spring Boot的环境变量中获取特定前缀下的配置属性，并将其绑定到给定的目标类上。这里将属性绑定到map上
      */
     private static Object v2(final Environment environment, final String prefix, final Class<?> targetClass) {
         try {
@@ -75,7 +76,7 @@ public class PropertyUtil {
             //调用get方法，获取最终的绑定结果并返回
             return resultGetMethod.invoke(bindResultObject);
         } catch (final ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException
-                | IllegalArgumentException | InvocationTargetException ex) {
+                       | IllegalArgumentException | InvocationTargetException ex) {
             throw new RuntimeException(ex.getMessage(), ex);
         }
     }
