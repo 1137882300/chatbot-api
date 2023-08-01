@@ -51,15 +51,28 @@ public class PropertyUtil {
         }
     }
 
+    /**
+     * @author juzi
+     * @date 2023/7/11 上午 9:27
+     * @description 从Spring Boot的环境变量中获取特定前缀下的配置属性，并将其绑定到给定的目标类上。
+     */
     private static Object v2(final Environment environment, final String prefix, final Class<?> targetClass) {
         try {
+            //加载这个类
             Class<?> binderClass = Class.forName("org.springframework.boot.context.properties.bind.Binder");
+            //获取Binder类的get方法
             Method getMethod = binderClass.getDeclaredMethod("get", Environment.class);
+            //获取Binder类的bind、方法
             Method bindMethod = binderClass.getDeclaredMethod("bind", String.class, Class.class);
+            //调用get方法，获取Binder对象
             Object binderObject = getMethod.invoke(null, environment);
+            //前缀处理
             String prefixParam = prefix.endsWith(".") ? prefix.substring(0, prefix.length() - 1) : prefix;
+            //调用bind方法，将配置属性绑定到目标类上，返回绑定结果对象
             Object bindResultObject = bindMethod.invoke(binderObject, prefixParam, targetClass);
+            //获取绑定结果对象的get方法
             Method resultGetMethod = bindResultObject.getClass().getDeclaredMethod("get");
+            //调用get方法，获取最终的绑定结果并返回
             return resultGetMethod.invoke(bindResultObject);
         } catch (final ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException
                 | IllegalArgumentException | InvocationTargetException ex) {
